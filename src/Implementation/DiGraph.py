@@ -42,9 +42,10 @@ class DiGraph(GraphInterface):
                 node_edges = self.into_edges.get(str(key))
                 if ans.get(str(key)) is None:
                     ans[str(key)] = {}
-                for key2 in node_edges:
-                    edge = self.into_edges.get(str(key)).get(str(key2))
-                    ans[str(key)] = (edge.src, edge.weight)
+                if node_edges is not None:
+                    for key2 in node_edges:
+                        edge = self.into_edges.get(str(key)).get(str(key2))
+                        ans[str(key)] = (edge.src, edge.weight)
         return ans
 
     def all_out_edges_of_node(self, id1: int) -> dict:
@@ -58,9 +59,10 @@ class DiGraph(GraphInterface):
                 node_edges = self.out_edges.get(str(key))
                 if ans.get(str(key)) is None:
                     ans[str(key)] = {}
-                for key2 in node_edges:
-                    edge = self.out_edges.get(str(key)).get(str(key2))
-                    ans[str(key)] = (edge.src, edge.weight)
+                if node_edges is not None:
+                    for key2 in node_edges:
+                        edge = self.out_edges.get(str(key)).get(str(key2))
+                        ans[str(key)] = (edge.src, edge.weight)
         return ans
 
     def get_mc(self) -> int:
