@@ -55,6 +55,19 @@ class GraphAlgo(GraphAlgoInterface):
             return False
         return True
 
+    """
+        Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
+        Mission -> set all tags and w of all the nodes. The tag will store this node father id, in the shortest path
+                    from src to dest. And w will store the shortest path distance(weight).
+        Implementation:
+        Step 1: Set all weight to infinity, tags to -1, and the src node weight to 0.
+        Step 2: Creat a priority queue and add the src node to it.
+        Step 3: While the queue is not empty pull an element.
+        Step 4: Go throw all its edges to its neighbors, and check if the current neighbor weight >
+                new val (element weight + the edge between them).
+                If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
+    """
+
     def dijkstra(self, src: int) -> int:
         if self.graph.nodes_dict.get(str(src)) is None:
             return no_path
@@ -81,6 +94,19 @@ class GraphAlgo(GraphAlgoInterface):
             node.w = w_val
             node.tag = tag_val
 
+    """
+        The Idea for this function is also based on the Dijkstra's algorithm.
+        Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest
+                    And the path cost(weight).
+        Implementation:
+        Step 1: Do dijkstra on the src node.
+        Step 2: Check if the returned value shows a valid path(using flag).
+        Step 3: Go to the dest node tag and start gathering fathers(tag value stores this node father id) to a list.
+        Step 4: The list we made is reversed. therefore, reverse it.
+        Last, return the list and the dest node w (after the dijkstra its stores the shortest dist from src to it)
+        
+    """
+
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         flag = self.dijkstra(id1)
         src_node = self.graph.nodes_dict.get(str(id1))
@@ -105,12 +131,34 @@ class GraphAlgo(GraphAlgoInterface):
             ans_list.append(stack.pop())
         return dst_node.w, ans_list
 
+    """
+        https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
+        The Idea for this function is a Greedy algorithm.
+        Mission ->  Given a city nodes the function Returns a list of nodes represents the shortest path throw all.
+        Implementation -> Same idea as before:
+        Step 1: Chose the first node. Add is to the ans array.
+        Step 2: Find the closest node in the given city to this node(lets call it CN).
+        Step 3: Get the path between them, and add it to the ans array.
+        Step 4: Remove the current node from cities and add CN
+        Step 5: Loop till there are no more nodes in cities.
+        Last, return the ans list.
+    """
+
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         """
         Finds the shortest path that visits all the nodes in the list
         :param node_lst: A list of nodes id's
         :return: A list of the nodes id's in the path, and the overall distance
         """
+
+    """
+        Mission -> Find the NodeData which minimizes the max distance to all the other nodes.
+        Implementation:
+        Step 1: Check if the graph is connected. If not return null.
+        Step 2: ForEach node in the graph call dijkstra, And find the max weight value.
+        Step 3: If this value is lower than the last canter update, update the center to this value.
+        Last, return the center.
+    """
 
     def centerPoint(self) -> (int, float):
         #     isConnected?
