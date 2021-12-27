@@ -3,8 +3,8 @@ import random
 import queue
 from typing import List
 
-from Implementation.Edge import Edge
-from Implementation.Node import Node
+from matplotlib import pyplot as plt
+
 from api.GraphAlgoInterface import GraphAlgoInterface
 from src.Implementation.DiGraph import DiGraph
 from api.GraphInterface import GraphInterface
@@ -24,22 +24,28 @@ class GraphAlgo(GraphAlgoInterface):
 
     def load_from_json(self, file_name: str) -> bool:
         try:
-            data = open(file_name, 'r')
-            with data as f:
-                file = json.load(f)
-                nodes = file['Nodes']
-                edges = file['Edges']
-            for node in nodes:
-                id = node['id']
-                pos = node['pos']
-                if pos is None:
-                    x = random.uniform(35.18763666989508, 35.212217299435025)
-                    y = random.uniform(32.09925715462185, 32.109397749579834)
+            self.file = file_name
+            self.graph.__init__()
+            with open(file_name, 'r') as file:
+                l = json.load(file)
+                ListNodes = l['Nodes']
+                ListEdges = l['Edges']
+            for n in ListNodes:
+                try:
+                    tmp = n['pos'].split(",")
+                    x = float(tmp[0])
+                    y = float(tmp[1])
                     pos = (x, y, 0.0)
-                self.graph.add_node(id, pos)
-            for edge in edges:
-                self.graph.add_edge(edge['src'], edge['dest'], edge['w'])
-        except Exception:
+                except Exception:
+                    x = random.uniform(35.19, 35.22)
+                    y = random.uniform(32.05, 32.22)
+                    pos = (x, y, 0.0)
+
+                self.graph.add_node(n['id'], pos)
+            for e in ListEdges:
+                self.graph.add_edge(e['src'], e['dest'], e['w'])
+            return True
+        except:
             return False
         return True
 
@@ -89,6 +95,31 @@ class GraphAlgo(GraphAlgoInterface):
         if src == dst:
             return 0
         return dst_node.w
+
+    #
+    # def shortest_path_dist(self, src: int, dst: int) -> float:
+    #     flag = self.graph.dijkstra(src)
+    #     src_node = self.graph.nodes_dict.get(str(src))
+    #     self.set_all_tags(float('inf'), -1)
+    #     node_q = queue.PriorityQueue()
+    #     node_q.put(src_node)
+    #     src_node.w = 0
+    #
+    #     while not node_q.empty():
+    #         node = node_q.get()
+    #         for neighbour_edge in self.graph.out_edges.get(str(node.key)).values():
+    #             neighbour_node = self.graph.nodes_dict.get(str(neighbour_edge.dest))
+    #             neighbours_new_weight = neighbour_edge.weight + node.w
+    #             if neighbour_node.w > neighbours_new_weight:
+    #                 neighbour_node.tag = node.key
+    #                 neighbour_node.w = neighbours_new_weight
+    #                 node_q.put(neighbour_node)
+    #     return valid_path
+    #
+    # def set_all_tags(self, w_val: float, tag_val: int):
+    #     for node in self.graph.nodes_dict.values():
+    #         node.w = w_val
+    #         node.tag = tag_val
 
     """
         The Idea for this function is also based on the Dijkstra's algorithm.
@@ -182,7 +213,7 @@ class GraphAlgo(GraphAlgoInterface):
 
     def centerPoint(self) -> (int, float):
         if not self.is_connected():
-            return None , float('inf')
+            return None, float('inf')
         center = None
         best_dist = float('inf')
         for node in self.graph.nodes_dict.values():
@@ -197,13 +228,25 @@ class GraphAlgo(GraphAlgoInterface):
         return center, best_dist
 
     def plot_graph(self) -> None:
-        """
-        Plots the graph.
-        If the nodes have a position, the nodes will be placed there.
-        Otherwise, they will be placed in a random but elegant manner.
-        @return: None
-        """
-        raise NotImplementedError
+        X_locations = []
+        Y_locations = []
+        for node in self.graph.nodes_dict.values():
+            X_locations.append(node.location[0])
+            Y_locations.append(node.location[1])
+        plt.plot(X_locations, Y_locations, 'ro')
+        for i in range(len(X_locations)):
+            plt.annotate(i, xy=(X_locations[i] * 0.999992, Y_locations[i] * 1.000005))
+        for node_id in self.graph.get_all_v().keys():
+            currNode = self.get_graph().all_out_edges_of_node(node_id)
+            if (currNode is not None):
+                for edge in self.graph.all_out_edges_of_node(node_id).keys():
+                    srcX = self.get_graph().get_all_v().get(node_id).location[0]
+                    srcY = self.get_graph().get_all_v().get(node_id).location[1]
+                    destX = self.get_graph().get_all_v().get(edge).location[0]
+                    destY = self.get_graph().get_all_v().get(edge).location[1]
+
+                    plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY), arrowprops={'arrowstyle': "<-", 'lw': 2})
+        plt.show()
 
 
 if __name__ == '__main__':
@@ -213,5 +256,5 @@ if __name__ == '__main__':
     # print(g.shortest_path(0, 6))
     # print(g.centerPoint())
     # print(g.TSP([0, 20, 5, 28, 4]))
-    # print(g.is_connected())
-    print(g.centerPoint())
+    print(g.is_connected())
+    g.plot_graph()
