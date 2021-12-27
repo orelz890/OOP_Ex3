@@ -99,7 +99,6 @@ class DiGraph(GraphInterface):
         return True
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        pos = (random.uniform(35.19, 35.22), random.uniform(32.05, 32.22), 0.0)
         node = self.nodes_dict.get(str(node_id))
         if node is not None:
             return False
