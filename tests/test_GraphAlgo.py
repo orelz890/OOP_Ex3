@@ -26,7 +26,6 @@ class test_GraphAlgo(unittest.TestCase):
 
     def test_tsp(self):
         pass
-
     def test_center_point(self):
         pass
 
