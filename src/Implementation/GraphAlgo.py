@@ -3,6 +3,7 @@ import random
 import queue
 from typing import List
 
+# from matplotlib import pyplot as plt
 from matplotlib import pyplot as plt
 
 from api.GraphAlgoInterface import GraphAlgoInterface
@@ -78,8 +79,8 @@ class GraphAlgo(GraphAlgoInterface):
         return self.is_node_connected(reversed_graph, some_node)
 
     def is_node_connected(self, DWG: DiGraph, key: int) -> bool:
-        # flag = DWG.dijkstra(key, -1)
-        flag = DWG.dijkstra(key)
+        flag = DWG.dijkstra(key, -1)
+        # flag = DWG.dijkstra(key)
         # If one of the nodes tag still holds -1 as his father it means there is no path to it from the src node.
         for node in DWG.nodes_dict.values():
             if node.tag == no_path:
@@ -87,8 +88,8 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
     def shortest_path_dist(self, src: int, dst: int) -> float:
-        flag = self.graph.dijkstra(src)
-        # flag = self.graph.dijkstra(src, dst)
+        # flag = self.graph.dijkstra(src)
+        flag = self.graph.dijkstra(src, dst)
         src_node = self.graph.nodes_dict.get(str(src))
         dst_node = self.graph.nodes_dict.get(str(dst))
         if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
@@ -107,12 +108,12 @@ class GraphAlgo(GraphAlgoInterface):
         Step 3: Go to the dest node tag and start gathering fathers(tag value stores this node father id) to a list.
         Step 4: The list we made is reversed. therefore, reverse it.
         Last, return the list and the dest node w (after the dijkstra its stores the shortest dist from src to it)
-        
+
     """
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        flag = self.graph.dijkstra(id1)
-        # flag = self.graph.dijkstra(id1, id2)
+        # flag = self.graph.dijkstra(id1)
+        flag = self.graph.dijkstra(id1, id2)
         src_node = self.graph.nodes_dict.get(str(id1))
         dst_node = self.graph.nodes_dict.get(str(id2))
         if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
@@ -194,8 +195,8 @@ class GraphAlgo(GraphAlgoInterface):
         center = None
         best_dist = float('inf')
         for node in self.graph.nodes_dict.values():
-            self.graph.dijkstra(node.key)
-            # self.graph.dijkstra(node.key, -1)
+            # self.graph.dijkstra(node.key)
+            self.graph.dijkstra(node.key, -1)
             temp = float('-inf')
             for node2 in self.graph.nodes_dict.values():
                 if node2.w > temp:
@@ -224,16 +225,17 @@ class GraphAlgo(GraphAlgoInterface):
                         destX = self.get_graph().get_all_v().get(edge).location[0]
                         destY = self.get_graph().get_all_v().get(edge).location[1]
 
-                        plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY), arrowprops={'arrowstyle': "<-", 'lw': 2})
+                        plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY),
+                                     arrowprops={'arrowstyle': "<-", 'lw': 2})
         plt.show()
 
 
 if __name__ == '__main__':
     g = GraphAlgo()
     # g.load_from_json("../../data/NotConnectedG.json")
-    g.load_from_json("../../data/G3.json")
+    g.load_from_json("../../data/1000Nodes.json")
     # print(g.shortest_path(0, 6))
     print(g.centerPoint())
     # print(g.TSP([0, 20, 5, 28, 4]))
     # print(g.is_connected())
-    g.plot_graph()
+    # g.plot_graph()

@@ -157,29 +157,29 @@ class DiGraph(GraphInterface):
                 new val (element weight + the edge between them).
                 If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
     """
-
-    def dijkstra(self, src: int) -> float:
-        if self.nodes_dict.get(str(src)) is None:
-            return no_path
-
-        src_node = self.nodes_dict.get(str(src))
-        self.set_all_tags(float('inf'), -1)
-        node_q = queue.PriorityQueue()
-        node_q.put(src_node)
-        src_node.w = 0
-        src_node.tag = src
-
-        while not node_q.empty():
-            node = node_q.get()
-            if self.out_edges.get(str(node.key)) is not None:
-                for neighbour_edge in self.out_edges.get(str(node.key)).values():
-                    neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
-                    neighbours_new_weight = neighbour_edge.weight + node.w
-                    if neighbour_node.w > neighbours_new_weight:
-                        neighbour_node.tag = node.key
-                        neighbour_node.w = neighbours_new_weight
-                        node_q.put(neighbour_node)
-        return valid_path
+    #
+    # def dijkstra(self, src: int) -> float:
+    #     if self.nodes_dict.get(str(src)) is None:
+    #         return no_path
+    #
+    #     src_node = self.nodes_dict.get(str(src))
+    #     self.set_all_tags(float('inf'), -1)
+    #     node_q = queue.PriorityQueue()
+    #     node_q.put(src_node)
+    #     src_node.w = 0
+    #     src_node.tag = src
+    #
+    #     while not node_q.empty():
+    #         node = node_q.get()
+    #         if self.out_edges.get(str(node.key)) is not None:
+    #             for neighbour_edge in self.out_edges.get(str(node.key)).values():
+    #                 neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
+    #                 neighbours_new_weight = neighbour_edge.weight + node.w
+    #                 if neighbour_node.w > neighbours_new_weight:
+    #                     neighbour_node.tag = node.key
+    #                     neighbour_node.w = neighbours_new_weight
+    #                     node_q.put(neighbour_node)
+    #     return valid_path
 
     # def dijkstra(self, src: int):
     #     node_q = queue.PriorityQueue()
@@ -198,30 +198,33 @@ class DiGraph(GraphInterface):
     #                 dst_node.w = best_w
     #                 node_q.get(dst_node)
     #                 node_q.put(dst_node)
-    #
-    # def dijkstra(self, src_key: int, dest_key: int):
-    #     src = self.nodes_dict.get(str(src_key))
-    #     if src is None:
-    #         return no_path
-    #     self.set_all_tags(float('inf'), -1)
-    #
-    #     node_queue = [src]
-    #     src.w = 0
-    #     while node_queue:
-    #         temp = node_queue.pop(0)
-    #         if temp.info == "White":
-    #             temp.info = "Black"
-    #             if temp.key == dest_key:
-    #                 return temp.w
-    #             for edge in self.out_edges.get(str(temp.key)).values():
-    #                 node = self.nodes_dict.get(str(edge.dest))
-    #                 if node.info == "White":
-    #                     if temp.w + edge.weight < node.w:
-    #                         node.w = temp.w + edge.weight
-    #                         node.tag = temp.key
-    #                     node_queue.append(node)
-    #     src.tag = src_key
-    #     return valid_path
+
+    def dijkstra(self, src_key: int, dest_key: int):
+        src = self.nodes_dict.get(str(src_key))
+        if src is None:
+            return no_path
+        self.set_all_tags(float('inf'), -1)
+
+        node_queue = [src]
+        # node_queue = queue.PriorityQueue()
+        src.w = 0
+        while node_queue:
+            node_queue.sort()
+            temp = node_queue.pop(0)
+            if temp.info == "White":
+                temp.info = "Black"
+                if temp.key == dest_key:
+                    return temp.w
+                for edge in self.out_edges.get(str(temp.key)).values():
+                    node = self.nodes_dict.get(str(edge.dest))
+                    if node.info == "White":
+                        if temp.w + edge.weight < node.w:
+                            node.w = temp.w + edge.weight
+                            node.tag = temp.key
+                        node_queue.append(node)
+        src.tag = src_key
+        return valid_path
+
 
     def set_all_tags(self, w_val: float, tag_val: int):
         for node in self.nodes_dict.values():
