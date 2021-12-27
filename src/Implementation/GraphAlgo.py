@@ -2,6 +2,9 @@ import json
 import random
 import queue
 from typing import List
+
+from Implementation.Edge import Edge
+from Implementation.Node import Node
 from api.GraphAlgoInterface import GraphAlgoInterface
 from src.Implementation.DiGraph import DiGraph
 from api.GraphInterface import GraphInterface
@@ -55,44 +58,37 @@ class GraphAlgo(GraphAlgoInterface):
             return False
         return True
 
-    """
-        Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
-        Mission -> set all tags and w of all the nodes. The tag will store this node father id, in the shortest path
-                    from src to dest. And w will store the shortest path distance(weight).
-        Implementation:
-        Step 1: Set all weight to infinity, tags to -1, and the src node weight to 0.
-        Step 2: Creat a priority queue and add the src node to it.
-        Step 3: While the queue is not empty pull an element.
-        Step 4: Go throw all its edges to its neighbors, and check if the current neighbor weight >
-                new val (element weight + the edge between them).
-                If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
-    """
+    def is_connected(self) -> bool:
+        if len(self.graph.nodes_dict) == 0 or len(self.graph.nodes_dict) == 1:
+            return True
+        # some_node = random.choice(list(self.graph.nodes_dict.keys()))
+        some_node = 1
+        if not self.is_node_connected(self.graph, some_node):
+            return False
+        reversed_graph = DiGraph()
+        reversed_graph.nodes_dict = self.graph.nodes_dict
+        for node_key in self.graph.nodes_dict.keys():
+            for edge in self.graph.out_edges.get(str(node_key)).values():
+                reversed_graph.add_edge(edge.dest, edge.src, edge.weight)
+        return self.is_node_connected(reversed_graph, some_node)
 
-    def dijkstra(self, src: int) -> int:
-        if self.graph.nodes_dict.get(str(src)) is None:
-            return no_path
+    def is_node_connected(self, DWG: DiGraph, key: int) -> bool:
+        flag = DWG.dijkstra(key)
+        # If one of the nodes tag still holds -1 as his father it means there is no path to it from the src node.
+        for node in DWG.nodes_dict.values():
+            if node.tag == no_path:
+                return False
+        return True
 
+    def shortest_path_dist(self, src: int, dst: int) -> float:
+        flag = self.graph.dijkstra(src)
         src_node = self.graph.nodes_dict.get(str(src))
-        self.set_all_tags(float('inf'), -1)
-        node_q = queue.PriorityQueue()
-        node_q.put(src_node)
-        src_node.w = 0
-
-        while not node_q.empty():
-            node = node_q.get()
-            for neighbour_edge in self.graph.out_edges.get(str(node.key)).values():
-                neighbour_node = self.graph.nodes_dict.get(str(neighbour_edge.dest))
-                neighbours_new_weight = neighbour_edge.weight + node.w
-                if neighbour_node.w > neighbours_new_weight:
-                    neighbour_node.tag = node.key
-                    neighbour_node.w = neighbours_new_weight
-                    node_q.put(neighbour_node)
-        return valid_path
-
-    def set_all_tags(self, w_val: float, tag_val: int):
-        for node in self.graph.nodes_dict.values():
-            node.w = w_val
-            node.tag = tag_val
+        dst_node = self.graph.nodes_dict.get(str(dst))
+        if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
+            return float('inf')
+        if src == dst:
+            return 0
+        return dst_node.w
 
     """
         The Idea for this function is also based on the Dijkstra's algorithm.
@@ -108,7 +104,7 @@ class GraphAlgo(GraphAlgoInterface):
     """
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        flag = self.dijkstra(id1)
+        flag = self.graph.dijkstra(id1)
         src_node = self.graph.nodes_dict.get(str(id1))
         dst_node = self.graph.nodes_dict.get(str(id2))
         if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
@@ -145,11 +141,35 @@ class GraphAlgo(GraphAlgoInterface):
     """
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        """
-        Finds the shortest path that visits all the nodes in the list
-        :param node_lst: A list of nodes id's
-        :return: A list of the nodes id's in the path, and the overall distance
-        """
+        if len(node_lst) == 0:
+            return [], 0
+        if len(node_lst) == 1:
+            return [self.graph.nodes_dict.get(str(node_lst[0]))], 0
+        current_node = self.graph.nodes_dict.get(str(node_lst[0]))
+        node_lst.remove(node_lst[0])
+        ans = [current_node]
+        total_dist = 0
+        while node_lst:
+            src = float('-inf')
+            dst = float('-inf')
+            shortest_dist = float('inf')
+            i = 0
+            for node_key in node_lst:
+                dist = self.shortest_path_dist(current_node.key, node_key)
+                if dist < shortest_dist:
+                    src = i
+                    dst = node_key
+                    shortest_dist = dist
+                i += 1
+            # Now we know who are the current src and dst that has the shortest path between them
+            shortest_path = self.shortest_path(current_node.key, dst)[1]
+            shortest_path.remove(shortest_path[0])
+            # Filling the ans with the list of nodes we got from the shortestPath function.
+            ans.extend(shortest_path)
+            current_node = self.graph.nodes_dict.get(str(node_lst[src]))
+            node_lst.remove(node_lst[src])
+            total_dist += shortest_dist
+        return ans, total_dist
 
     """
         Mission -> Find the NodeData which minimizes the max distance to all the other nodes.
@@ -161,11 +181,12 @@ class GraphAlgo(GraphAlgoInterface):
     """
 
     def centerPoint(self) -> (int, float):
-        #     isConnected?
+        if not self.is_connected():
+            return None , float('inf')
         center = None
         best_dist = float('inf')
         for node in self.graph.nodes_dict.values():
-            self.dijkstra(node.key)
+            self.graph.dijkstra(node.key)
             temp = float('-inf')
             for node2 in self.graph.nodes_dict.values():
                 if node2.w > temp:
@@ -187,6 +208,10 @@ class GraphAlgo(GraphAlgoInterface):
 
 if __name__ == '__main__':
     g = GraphAlgo()
+    # g.load_from_json("../../data/NotConnectedG.json")
     g.load_from_json("../../data/G3.json")
     # print(g.shortest_path(0, 6))
+    # print(g.centerPoint())
+    # print(g.TSP([0, 20, 5, 28, 4]))
+    # print(g.is_connected())
     print(g.centerPoint())

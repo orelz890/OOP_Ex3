@@ -1,6 +1,11 @@
+import queue
+
 from Implementation.Node import Node
 from Implementation.Edge import Edge
 from api.GraphInterface import GraphInterface
+
+no_path = -1
+valid_path = 1
 
 
 class DiGraph(GraphInterface):
@@ -138,6 +143,65 @@ class DiGraph(GraphInterface):
         node1.weight -= 1
         self.MC += 1
         return True
+
+    """
+        Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
+        Mission -> set all tags and w of all the nodes. The tag will store this node father id, in the shortest path
+                    from src to dest. And w will store the shortest path distance(weight).
+        Implementation:
+        Step 1: Set all weight to infinity, tags to -1, and the src node weight to 0.
+        Step 2: Creat a priority queue and add the src node to it.
+        Step 3: While the queue is not empty pull an element.
+        Step 4: Go throw all its edges to its neighbors, and check if the current neighbor weight >
+                new val (element weight + the edge between them).
+                If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
+    """
+
+    def dijkstra(self, src: int) -> float:
+        if self.nodes_dict.get(str(src)) is None:
+            return no_path
+
+        src_node = self.nodes_dict.get(str(src))
+        self.set_all_tags(float('inf'), -1)
+        node_q = queue.PriorityQueue()
+        node_q.put(src_node)
+        src_node.w = 0
+        src_node.tag = src
+
+        while not node_q.empty():
+            node = node_q.get()
+            if self.out_edges.get(str(node.key)) is not None:
+                for neighbour_edge in self.out_edges.get(str(node.key)).values():
+                    neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
+                    neighbours_new_weight = neighbour_edge.weight + node.w
+                    if neighbour_node.w > neighbours_new_weight:
+                        neighbour_node.tag = node.key
+                        neighbour_node.w = neighbours_new_weight
+                        node_q.put(neighbour_node)
+        return valid_path
+
+    # def dijkstra(self, src: int):
+    #     node_q = queue.PriorityQueue()
+    #     for node in self.nodes_dict.values():
+    #         if node.key == src:
+    #             node.w = 0.0
+    #         else:
+    #             node.w = float("inf")
+    #         node_q.put(node)
+    #     while node_q:
+    #         node = node_q.get()
+    #         for edge in self.out_edges.get(str(node.key)).values():
+    #             dst_node = self.nodes_dict.get(str(edge.dest))
+    #             best_w = node.w + edge.weight
+    #             if best_w < dst_node.w:
+    #                 dst_node.w = best_w
+    #                 node_q.get(dst_node)
+    #                 node_q.put(dst_node)
+
+    def set_all_tags(self, w_val: float, tag_val: int):
+        for node in self.nodes_dict.values():
+            node.w = w_val
+            node.tag = tag_val
 
 
 if __name__ == '__main__':

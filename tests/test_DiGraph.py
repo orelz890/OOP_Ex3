@@ -86,13 +86,15 @@ class test_DiGraph(unittest.TestCase):
         self.assertEqual(self.n2.key, edge2.src)
         self.assertEqual(self.n1.key, edge2.dest)
         self.assertEqual(14.7, edge2.weight)
+        self.assertEqual(self.g.out_edges[str(self.n1.key)][str(self.n2.key)],
+                         self.g.into_edges[str(self.n2.key)][str(self.n1.key)])
 
     def test_add_node(self):
         self.g.add_node(self.n1.key, self.n1.location)
         self.g.add_node(self.n2.key, self.n2.location)
         self.assertEqual(2, self.g.node_size)
         node1 = self.g.nodes_dict.get(str(self.n1.key))
-        self.assertEqual(self.n1.key,node1.key)
+        self.assertEqual(self.n1.key, node1.key)
         self.assertEqual(self.n1.location, node1.location)
         self.assertEqual(self.n1.weight, node1.weight)
         node2 = self.g.nodes_dict.get(str(self.n2.key))
@@ -135,3 +137,12 @@ class test_DiGraph(unittest.TestCase):
         edge1 = self.g.out_edges.get(str(self.n1.key)).get(str(self.n2.key))
         self.assertTrue(edge1 is None)
         self.assertEquals(3, self.g.edge_size)
+
+    def test_set_all_w(self):
+        self.g.set_all_tags(1.2, 890)
+        for node in self.g.nodes_dict.values():
+            self.assertEqual(1.2, node.w)
+            self.assertEqual(890, node.tag)
+
+    def test_dijkstra(self):
+        pass

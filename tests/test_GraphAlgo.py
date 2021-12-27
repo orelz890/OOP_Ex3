@@ -35,15 +35,6 @@ class test_GraphAlgo(unittest.TestCase):
         except Exception as exp:
             print(Exception, exp)
 
-    def test_dijkstra(self):
-        pass
-
-    def test_set_all_w(self):
-        self.g.set_all_tags(1.2, 890)
-        for node in self.g.graph.nodes_dict.values():
-            self.assertEqual(1.2, node.w)
-            self.assertEqual(890, node.tag)
-
     def test_shortest_path(self):
         self.g.load_from_json("../data/A0.json")
         self.assertEqual((1.4004465106761335,
