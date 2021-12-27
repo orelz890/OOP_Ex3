@@ -1,3 +1,6 @@
+import random
+
+
 class Node:
     def __init__(self, key: int, pos: tuple = None):
         self.key = key
@@ -30,3 +33,7 @@ class Node:
 
     def __ge__(self, other):
         return self.weight <= other.weight
+
+    def pos_to_string(self):
+        string = "{},{},{}".format(self.location[0], self.location[1], self.location[2])
+        return string
