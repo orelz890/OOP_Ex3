@@ -72,9 +72,10 @@ class GraphAlgo(GraphAlgoInterface):
             return False
         reversed_graph = DiGraph()
         reversed_graph.nodes_dict = self.graph.nodes_dict
-        for node_key in self.graph.nodes_dict.keys():
-            for edge in self.graph.out_edges.get(str(node_key)).values():
-                reversed_graph.add_edge(edge.dest, edge.src, edge.weight)
+        for node_key in self.graph.out_edges.keys():
+            if node_key is not None:
+                for edge in self.graph.out_edges.get(str(node_key)).values():
+                    reversed_graph.add_edge(edge.dest, edge.src, edge.weight)
         return self.is_node_connected(reversed_graph, some_node)
 
     def is_node_connected(self, DWG: DiGraph, key: int) -> bool:
@@ -224,16 +225,17 @@ class GraphAlgo(GraphAlgoInterface):
                         destX = self.get_graph().get_all_v().get(edge).location[0]
                         destY = self.get_graph().get_all_v().get(edge).location[1]
 
-                        plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY), arrowprops={'arrowstyle': "<-", 'lw': 2})
+                        plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY),
+                                     arrowprops={'arrowstyle': "<-", 'lw': 2})
         plt.show()
 
 
 if __name__ == '__main__':
     g = GraphAlgo()
     # g.load_from_json("../../data/NotConnectedG.json")
-    g.load_from_json("../../data/G3.json")
+    g.load_from_json("../../data/A5.json")
     # print(g.shortest_path(0, 6))
     print(g.centerPoint())
-    # print(g.TSP([0, 20, 5, 28, 4]))
+    print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
     # print(g.is_connected())
     g.plot_graph()

@@ -4,7 +4,7 @@ import random
 from Implementation.Node import Node
 from Implementation.Edge import Edge
 from api.GraphInterface import GraphInterface
-
+from src.Implementation.PQ import PriorityQueue
 no_path = -1
 valid_path = 1
 
@@ -164,13 +164,13 @@ class DiGraph(GraphInterface):
 
         src_node = self.nodes_dict.get(str(src))
         self.set_all_tags(float('inf'), -1)
-        node_q = queue.PriorityQueue()
-        node_q.put(src_node)
+        node_q = PriorityQueue()
+        node_q.insert(src_node)
         src_node.w = 0
         src_node.tag = src
 
-        while not node_q.empty():
-            node = node_q.get()
+        while not node_q.isEmpty():
+            node = node_q.delete()
             if self.out_edges.get(str(node.key)) is not None:
                 for neighbour_edge in self.out_edges.get(str(node.key)).values():
                     neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
@@ -178,7 +178,7 @@ class DiGraph(GraphInterface):
                     if neighbour_node.w > neighbours_new_weight:
                         neighbour_node.tag = node.key
                         neighbour_node.w = neighbours_new_weight
-                        node_q.put(neighbour_node)
+                        node_q.insert(neighbour_node)
         return valid_path
 
     # def dijkstra(self, src: int):

@@ -19,22 +19,22 @@ class Node:
         return f"({self.key}, {self.location})"
 
     def __lt__(self, other):
-        return self.weight < other.weight
+        return self.w < other.w
 
     def __le__(self, other):
-        return self.weight <= other.weight
+        return self.w <= other.w
 
     def __eq__(self, other):
-        return self.weight == other.weight
+        return self.w == other.w
 
     def __ne__(self, other):
-        return self.weight != other.weight
+        return self.w != other.w
 
     def __gt__(self, other):
-        return self.weight > other.weight
+        return self.w > other.w
 
     def __ge__(self, other):
-        return self.weight <= other.weight
+        return self.w <= other.w
 
     def pos_to_string(self):
         string = "{},{},{}".format(self.location[0], self.location[1], self.location[2])
