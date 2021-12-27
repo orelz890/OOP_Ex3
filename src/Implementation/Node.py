@@ -5,6 +5,7 @@ class Node:
         self.weight = 0
         self.tag = 0
         self.w = 0
+        self.info = "White"
 
     def __str__(self):
         return f"({self.key}, {self.location})"
