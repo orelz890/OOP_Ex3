@@ -51,7 +51,10 @@ class GraphAlgo(GraphAlgoInterface):
     def save_to_json(self, file_name: str) -> bool:
         data = {"Nodes": [], "Edges": []}
         for node in self.graph.nodes_dict.values():
-            data["Nodes"].append({"id": node.key, "pos": node.location})
+            if node.flag is False:
+                data["Nodes"].append({"id": node.key, "pos": None})
+            else:
+                data["Nodes"].append({"id": node.key, "pos": node.location})
         for src in self.graph.out_edges.keys():
             for dst in self.graph.out_edges.get(str(src)).keys():
                 weight = self.graph.out_edges.get(str(src)).get(str(dst)).weight
@@ -66,8 +69,8 @@ class GraphAlgo(GraphAlgoInterface):
     def is_connected(self) -> bool:
         if len(self.graph.nodes_dict) == 0 or len(self.graph.nodes_dict) == 1:
             return True
-        # some_node = random.choice(list(self.graph.nodes_dict.keys()))
-        some_node = 1
+        some_node = random.choice(list(self.graph.nodes_dict.keys()))
+        # some_node = 1
         if not self.is_node_connected(self.graph, some_node):
             return False
         reversed_graph = DiGraph()
@@ -233,9 +236,10 @@ class GraphAlgo(GraphAlgoInterface):
 if __name__ == '__main__':
     g = GraphAlgo()
     # g.load_from_json("../../data/NotConnectedG.json")
-    g.load_from_json("../../data/A5.json")
+    # g.load_from_json("../../data/1000Nodes.json")
+    g.load_from_json("../../data/1000Nodes.json")
     # print(g.shortest_path(0, 6))
     print(g.centerPoint())
-    print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
+    # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
     # print(g.is_connected())
-    g.plot_graph()
+    # g.plot_graph()

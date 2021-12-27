@@ -3,6 +3,7 @@ import random
 
 class Node:
     def __init__(self, key: int, pos: tuple = None):
+        self.flag = True if pos is None else False
         if pos is None:
             pos = (random.uniform(35.19, 35.22), random.uniform(32.05, 32.22), 0.0)
         self.key = key

@@ -1,10 +1,12 @@
 import queue
 import random
 
+from Implementation.PriorityQ import PriorityQueue
 from Implementation.Node import Node
 from Implementation.Edge import Edge
 from api.GraphInterface import GraphInterface
 from src.Implementation.PQ import PriorityQueue
+
 no_path = -1
 valid_path = 1
 
@@ -158,28 +160,28 @@ class DiGraph(GraphInterface):
                 If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
     """
 
-    def dijkstra(self, src: int) -> float:
-        if self.nodes_dict.get(str(src)) is None:
-            return no_path
-
-        src_node = self.nodes_dict.get(str(src))
-        self.set_all_tags(float('inf'), -1)
-        node_q = PriorityQueue()
-        node_q.insert(src_node)
-        src_node.w = 0
-        src_node.tag = src
-
-        while not node_q.isEmpty():
-            node = node_q.delete()
-            if self.out_edges.get(str(node.key)) is not None:
-                for neighbour_edge in self.out_edges.get(str(node.key)).values():
-                    neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
-                    neighbours_new_weight = neighbour_edge.weight + node.w
-                    if neighbour_node.w > neighbours_new_weight:
-                        neighbour_node.tag = node.key
-                        neighbour_node.w = neighbours_new_weight
-                        node_q.insert(neighbour_node)
-        return valid_path
+    # def dijkstra(self, src: int) -> float:
+    #     if self.nodes_dict.get(str(src)) is None:
+    #         return no_path
+    #
+    #     src_node = self.nodes_dict.get(str(src))
+    #     self.set_all_tags(float('inf'), -1)
+    #     node_q = PriorityQueue()
+    #     node_q.insert(src_node)
+    #     src_node.w = 0
+    #     src_node.tag = src
+    #
+    #     while not node_q.isEmpty():
+    #         node = node_q.delete()
+    #         if self.out_edges.get(str(node.key)) is not None:
+    #             for neighbour_edge in self.out_edges.get(str(node.key)).values():
+    #                 neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
+    #                 neighbours_new_weight = neighbour_edge.weight + node.w
+    #                 if neighbour_node.w > neighbours_new_weight:
+    #                     neighbour_node.tag = node.key
+    #                     neighbour_node.w = neighbours_new_weight
+    #                     node_q.insert(neighbour_node)
+    #     return valid_path
 
     # def dijkstra(self, src: int):
     #     node_q = queue.PriorityQueue()
@@ -205,10 +207,12 @@ class DiGraph(GraphInterface):
     #         return no_path
     #     self.set_all_tags(float('inf'), -1)
     #
-    #     node_queue = [src]
+    #     # node_queue = [src]
+    #     node_queue = PriorityQueue()
+    #     node_queue.insert(src)
     #     src.w = 0
-    #     while node_queue:
-    #         temp = node_queue.pop(0)
+    #     while not node_queue.isEmpty():
+    #         temp = node_queue.delete()
     #         if temp.info == "White":
     #             temp.info = "Black"
     #             if temp.key == dest_key:
@@ -219,9 +223,55 @@ class DiGraph(GraphInterface):
     #                     if temp.w + edge.weight < node.w:
     #                         node.w = temp.w + edge.weight
     #                         node.tag = temp.key
-    #                     node_queue.append(node)
+    #                     node_queue.insert(node)
     #     src.tag = src_key
     #     return valid_path
+    # def dijkstra(self, src_key: int, dest_key: int):
+    #     src = self.nodes_dict.get(str(src_key))
+    #     if src is None:
+    #         return no_path
+    #     self.set_all_tags(float('inf'), -1)
+    #
+    #     node_queue = PriorityQ.PriorityQueue()
+    #     node_queue.insert(src)
+    #     src.w = 0
+    #     while node_queue.size() != 0:
+    #         temp = node_queue.delete()
+    #         if temp.info == "White":
+    #             temp.info = "Black"
+    #             if temp.key == dest_key:
+    #                 return temp.w
+    #             for edge in self.out_edges.get(str(temp.key)).values():
+    #                 node = self.nodes_dict.get(str(edge.dest))
+    #                 if node.info == "White":
+    #                     if temp.w + edge.weight < node.w:
+    #                         node.w = temp.w + edge.weight
+    #                         node.tag = temp.key
+    #                     node_queue.insert(node)
+    #     src.tag = src_key
+    #     return valid_path
+
+    def dijkstra(self, src: int) -> float:
+        if self.nodes_dict.get(str(src)) is None:
+            return no_path
+
+        src_node = self.nodes_dict.get(str(src))
+        self.set_all_tags(float('inf'), -1)
+        node_q = PriorityQueue()
+        node_q.insert(src_node)
+        src_node.w = 0
+        src_node.tag = src
+
+        while node_q.size() != 0:
+            node = node_q.delete()
+            if self.out_edges.get(str(node.key)) is not None:
+                for neighbour_edge in self.out_edges.get(str(node.key)).values():
+                    neighbour_node = self.nodes_dict.get(str(neighbour_edge.dest))
+                    neighbours_new_weight = neighbour_edge.weight + node.w
+                    if neighbour_node.w > neighbours_new_weight:
+                        neighbour_node.tag = node.key
+                        neighbour_node.w = neighbours_new_weight
+                        node_q.insert(neighbour_node)
 
     def set_all_tags(self, w_val: float, tag_val: int):
         for node in self.nodes_dict.values():
