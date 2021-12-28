@@ -35,7 +35,7 @@ class Node:
         return self.w > other.w
 
     def __ge__(self, other):
-        return self.w <= other.w
+        return self.w >= other.w
 
     def pos_to_string(self):
         string = "{},{},{}".format(self.location[0], self.location[1], self.location[2])
