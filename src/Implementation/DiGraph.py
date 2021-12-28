@@ -1,11 +1,11 @@
 import queue
 import random
 
-from Implementation.PriorityQ import PriorityQueue
+# from Implementation.PriorityQ import PriorityQueue
 from Implementation.Node import Node
 from Implementation.Edge import Edge
 from api.GraphInterface import GraphInterface
-# from src.Implementation.PQ import PriorityQueue
+from src.Implementation.PQ import PriorityQueue
 
 no_path = -1
 valid_path = 1
@@ -275,29 +275,6 @@ class DiGraph(GraphInterface):
     #                     node_q.insert(neighbour_node)
     #     return valid_path
 
-    # # 52 sec 1000Nodes center with PQ
-    # def dijkstra(self, src: int):
-    #     if self.nodes_dict.get(str(src)) is None:
-    #         return no_path
-    #     priority_q = PriorityQueue()
-    #     for node in self.nodes_dict.values():
-    #         if node.key == src:
-    #             node.w = 0
-    #             node.tag = src
-    #         else:
-    #             node.w = float('inf')
-    #             node.tag = -1
-    #         priority_q.insert(node)
-    #     while not priority_q.isEmpty():
-    #         temp_node = priority_q.delete()
-    #         if self.out_edges.get(str(temp_node.key)) is not None:
-    #             for edge in self.out_edges.get(str(temp_node.key)).values():
-    #                 new_weight = temp_node.w + edge.weight
-    #                 if new_weight < self.nodes_dict.get(str(edge.dest)).w:
-    #                     self.nodes_dict.get(str(edge.dest)).w = new_weight
-    #                     self.nodes_dict.get(str(edge.dest)).tag = temp_node.key
-    #     return valid_path
-
     # 52 sec 1000Nodes center with PQ
     def dijkstra(self, src: int):
         if self.nodes_dict.get(str(src)) is None:
@@ -311,7 +288,7 @@ class DiGraph(GraphInterface):
                 node.w = float('inf')
                 node.tag = -1
             priority_q.insert(node)
-        while priority_q.size() != 0:
+        while not priority_q.isEmpty():
             temp_node = priority_q.delete()
             if self.out_edges.get(str(temp_node.key)) is not None:
                 for edge in self.out_edges.get(str(temp_node.key)).values():
@@ -321,13 +298,38 @@ class DiGraph(GraphInterface):
                         self.nodes_dict.get(str(edge.dest)).tag = temp_node.key
         return valid_path
 
+    # 52 sec 1000Nodes center with PQ
+    # def dijkstra(self, src: int):
+    #     if self.nodes_dict.get(str(src)) is None:
+    #         return no_path
+    #     priority_q = PriorityQueue()
+    #     for node in self.nodes_dict.values():
+    #         if node.key == src:
+    #             node.w = 0
+    #             node.tag = src
+    #         else:
+    #             node.w = float('inf')
+    #             node.tag = -1
+    #         priority_q.insert(node)
+    #     while priority_q.size() != 0:
+    #         temp_node = priority_q.delete()
+    #         if self.out_edges.get(str(temp_node.key)) is not None:
+    #             for edge in self.out_edges.get(str(temp_node.key)).values():
+    #                 new_weight = temp_node.w + edge.weight
+    #                 if new_weight < self.nodes_dict.get(str(edge.dest)).w:
+    #                     self.nodes_dict.get(str(edge.dest)).w = new_weight
+    #                     self.nodes_dict.get(str(edge.dest)).tag = temp_node.key
+    #     return valid_path
+
     def set_all_tags(self, w_val: float, tag_val: int):
         for node in self.nodes_dict.values():
             node.w = w_val
             node.tag = tag_val
             node.info = "White"
 
-
+    def __str__(self):
+        s = "Graph: |V|=" + str(self.v_size()) + ", |E|=" + str(self.e_size())
+        return s
 if __name__ == '__main__':
     g = DiGraph()
     # n1 = Node(0, (0, 0, 0))

@@ -14,7 +14,8 @@ class Node:
         self.info = "White"
 
     def __str__(self):
-        return f"({self.key}, {self.location})"
+        s = "id: " + str(self.key) + ", position: " + str(self.location)
+        return s
 
     def __repr__(self):
         return f"({self.key}, {self.location})"
