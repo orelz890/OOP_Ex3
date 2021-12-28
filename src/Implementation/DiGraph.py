@@ -1,10 +1,6 @@
-import queue
-import random
-
-# from Implementation.PriorityQ import PriorityQueue
-from Implementation.Node import Node
-from Implementation.Edge import Edge
-from api.GraphInterface import GraphInterface
+from src.Implementation.Node import Node
+from src.Implementation.Edge import Edge
+from src.api.GraphInterface import GraphInterface
 from src.Implementation.PQ import PriorityQueue
 
 no_path = -1
@@ -160,7 +156,6 @@ class DiGraph(GraphInterface):
                 If do, update it to the new val, the tag to element key(his father), and add the neighbor to the queue.
     """
 
-    # 52 sec 1000Nodes center with PQ
     def dijkstra(self, src: int):
         if self.nodes_dict.get(str(src)) is None:
             return no_path

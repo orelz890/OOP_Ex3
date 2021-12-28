@@ -11,13 +11,25 @@ class Node:
         self.weight = 0
         self.tag = 0
         self.w = 0
+        self.info = "White"
+        self.outEdges = {}
+        self.inEdges = {}
 
-    def __str__(self):
-        s = "id: " + str(self.key) + ", position: " + str(self.location)
-        return s
+    def add_out_edge(self, weight: float, dest: int):
+        self.outEdges[dest] = weight
+        self.outEdges.values()
+
+    # add in edge
+    def add_in_edge(self, weight: float, src: int):
+        self.inEdges[src] = weight
 
     def __repr__(self):
-        return f"({self.key}, {self.location})"
+
+        return "{}: |edges out| {} |edges in| {}".format(self.key, len(self.outEdges), len(self.inEdges))
+
+    def __str__(self):
+
+        return "{}: |edges out| {} |edges in| {}".format(self.key, self.outEdges, self.inEdges)
 
     def __lt__(self, other):
         return self.w < other.w
