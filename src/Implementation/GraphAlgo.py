@@ -236,7 +236,7 @@ class GraphAlgo(GraphAlgoInterface):
 # if __name__ == '__main__':
 #     g = GraphAlgo()
 #     # g.load_from_json("../../data/NotConnectedG.json")
-#     g.load_from_json("../../data/1000Nodes.json")
+#     g.load_from_json("../../data/G3.json")
 #     # g.load_from_json("../../data/10000Nodes.json")
 #     # print(g.shortest_path(0, 7547))
 #     print(g.centerPoint())
