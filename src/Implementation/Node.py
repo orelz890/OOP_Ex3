@@ -24,12 +24,11 @@ class Node:
         self.inEdges[src] = weight
 
     def __repr__(self):
-
-        return "{}: |edges out| {} |edges in| {}".format(self.key, len(self.outEdges), len(self.inEdges))
+        return f"({self.key}, {self.location})"
 
     def __str__(self):
-
-        return "{}: |edges out| {} |edges in| {}".format(self.key, self.outEdges, self.inEdges)
+        s = "id: " + str(self.key) + ", position: " + str(self.location)
+        return s
 
     def __lt__(self, other):
         return self.w < other.w

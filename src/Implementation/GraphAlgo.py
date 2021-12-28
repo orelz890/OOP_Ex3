@@ -208,7 +208,6 @@ class GraphAlgo(GraphAlgoInterface):
                 center = node.key
         return center, best_dist
 
-
     def plot_graph(self) -> bool:
         X_locations = []
         Y_locations = []
@@ -234,13 +233,3 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
 
-# if __name__ == '__main__':
-#     g = GraphAlgo()
-#     # g.load_from_json("../../data/NotConnectedG.json")
-#     g.load_from_json("../../data/G3.json")
-#     # g.load_from_json("../../data/10000Nodes.json")
-#     # print(g.shortest_path(0, 7547))
-#     print(g.centerPoint())
-#     # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
-#     # print(g.is_connected())
-#     # g.plot_graph()
