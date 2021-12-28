@@ -70,7 +70,6 @@ class GraphAlgo(GraphAlgoInterface):
         if len(self.graph.nodes_dict) == 0 or len(self.graph.nodes_dict) == 1:
             return True
         some_node = 0
-        # some_node = 1
         if not self.is_node_connected(self.graph, some_node):
             return False
         reversed_graph = DiGraph()
@@ -82,8 +81,7 @@ class GraphAlgo(GraphAlgoInterface):
         return self.is_node_connected(reversed_graph, some_node)
 
     def is_node_connected(self, DWG: DiGraph, key: int) -> bool:
-        # flag = DWG.dijkstra(key, -1)
-        flag = DWG.dijkstra(key)
+        DWG.dijkstra(key)
         # If one of the nodes tag still holds -1 as his father it means there is no path to it from the src node.
         for node in DWG.nodes_dict.values():
             if node.tag == no_path:
@@ -92,7 +90,6 @@ class GraphAlgo(GraphAlgoInterface):
 
     def shortest_path_dist(self, src: int, dst: int) -> float:
         flag = self.graph.dijkstra(src)
-        # flag = self.graph.dijkstra(src, dst)
         src_node = self.graph.nodes_dict.get(str(src))
         dst_node = self.graph.nodes_dict.get(str(dst))
         if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
@@ -116,7 +113,6 @@ class GraphAlgo(GraphAlgoInterface):
 
     def shortest_path(self, id1: int, id2: int) -> (float, list[int]):
         flag = self.graph.dijkstra(id1)
-        # flag = self.graph.dijkstra(id1, id2)
         src_node = self.graph.nodes_dict.get(str(id1))
         dst_node = self.graph.nodes_dict.get(str(id2))
         if src_node is None or dst_node is None or flag == no_path or dst_node.tag == -1:
@@ -202,7 +198,6 @@ class GraphAlgo(GraphAlgoInterface):
         best_dist = float('inf')
         for node in self.graph.nodes_dict.values():
             self.graph.dijkstra(node.key)
-            # self.graph.dijkstra(node.key, -1)
             temp = float('-inf')
             for node2 in self.graph.nodes_dict.values():
                 if node2.w > temp:
@@ -211,6 +206,7 @@ class GraphAlgo(GraphAlgoInterface):
                 best_dist = temp
                 center = node.key
         return center, best_dist
+
 
     def plot_graph(self) -> bool:
         X_locations = []
@@ -237,13 +233,13 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
 
-if __name__ == '__main__':
-    g = GraphAlgo()
-    # g.load_from_json("../../data/NotConnectedG.json")
-    # g.load_from_json("../../data/1000Nodes.json")
-    g.load_from_json("../../data/1000Nodes.json")
-    # print(g.shortest_path(0, 6))
-    print(g.centerPoint())
-    # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
-    # print(g.is_connected())
-    # g.plot_graph()
+# if __name__ == '__main__':
+#     g = GraphAlgo()
+#     # g.load_from_json("../../data/NotConnectedG.json")
+#     g.load_from_json("../../data/1000Nodes.json")
+#     # g.load_from_json("../../data/10000Nodes.json")
+#     # print(g.shortest_path(0, 7547))
+#     print(g.centerPoint())
+#     # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
+#     # print(g.is_connected())
+#     # g.plot_graph()

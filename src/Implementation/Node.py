@@ -11,7 +11,6 @@ class Node:
         self.weight = 0
         self.tag = 0
         self.w = 0
-        self.info = "White"
 
     def __str__(self):
         s = "id: " + str(self.key) + ", position: " + str(self.location)
