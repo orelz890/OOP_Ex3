@@ -68,7 +68,8 @@ class test_GraphAlgo(unittest.TestCase):
 
     def test_save_to_json(self):
         try:
-            self.assertTrue(self.g.save_to_json("file"))
+            ans = self.g.save_to_json("file.json")
+            self.assertTrue(ans)
 
         except Exception:
             print(Exception)

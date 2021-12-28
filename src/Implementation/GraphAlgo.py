@@ -69,7 +69,7 @@ class GraphAlgo(GraphAlgoInterface):
     def is_connected(self) -> bool:
         if len(self.graph.nodes_dict) == 0 or len(self.graph.nodes_dict) == 1:
             return True
-        some_node = random.choice(list(self.graph.nodes_dict.keys()))
+        some_node = 0
         # some_node = 1
         if not self.is_node_connected(self.graph, some_node):
             return False
@@ -237,13 +237,13 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
 
-# if __name__ == '__main__':
-#     g = GraphAlgo()
-#     # g.load_from_json("../../data/NotConnectedG.json")
-#     # g.load_from_json("../../data/1000Nodes.json")
-#     g.load_from_json("../../data/1000Nodes.json")
-#     # print(g.shortest_path(0, 6))
-#     print(g.centerPoint())
-#     # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
-#     # print(g.is_connected())
-#     # g.plot_graph()
+if __name__ == '__main__':
+    g = GraphAlgo()
+    # g.load_from_json("../../data/NotConnectedG.json")
+    # g.load_from_json("../../data/1000Nodes.json")
+    g.load_from_json("../../data/1000Nodes.json")
+    # print(g.shortest_path(0, 6))
+    print(g.centerPoint())
+    # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
+    # print(g.is_connected())
+    # g.plot_graph()
