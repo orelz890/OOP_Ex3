@@ -114,7 +114,7 @@ class GraphAlgo(GraphAlgoInterface):
         
     """
 
-    def shortest_path(self, id1: int, id2: int) -> (float, list):
+    def shortest_path(self, id1: int, id2: int) -> (float, list[int]):
         flag = self.graph.dijkstra(id1)
         # flag = self.graph.dijkstra(id1, id2)
         src_node = self.graph.nodes_dict.get(str(id1))
@@ -136,7 +136,7 @@ class GraphAlgo(GraphAlgoInterface):
         # Now, we have a reversed version of the answer. Because we gathered fathers from dest till we saw the src.
         ans_list = []
         while stack:
-            ans_list.append(stack.pop())
+            ans_list.append(stack.pop().key)
         return dst_node.w, ans_list
 
     """
@@ -156,17 +156,20 @@ class GraphAlgo(GraphAlgoInterface):
         if len(node_lst) == 0:
             return [], 0
         if len(node_lst) == 1:
-            return [self.graph.nodes_dict.get(str(node_lst[0]))], 0
-        current_node = self.graph.nodes_dict.get(str(node_lst[0]))
-        node_lst.remove(node_lst[0])
-        ans = [current_node]
+            return [self.graph.nodes_dict.get(str(node_lst[0])).key], 0
+        temp_list = []
+        for id in node_lst:
+            temp_list.append(id)
+        current_node = self.graph.nodes_dict.get(str(temp_list[0]))
+        temp_list.remove(temp_list[0])
+        ans = [current_node.key]
         total_dist = 0
-        while node_lst:
+        while temp_list:
             src = float('-inf')
             dst = float('-inf')
             shortest_dist = float('inf')
             i = 0
-            for node_key in node_lst:
+            for node_key in temp_list:
                 dist = self.shortest_path_dist(current_node.key, node_key)
                 if dist < shortest_dist:
                     src = i
@@ -178,8 +181,8 @@ class GraphAlgo(GraphAlgoInterface):
             shortest_path.remove(shortest_path[0])
             # Filling the ans with the list of nodes we got from the shortestPath function.
             ans.extend(shortest_path)
-            current_node = self.graph.nodes_dict.get(str(node_lst[src]))
-            node_lst.remove(node_lst[src])
+            current_node = self.graph.nodes_dict.get(str(temp_list[src]))
+            temp_list.remove(temp_list[src])
             total_dist += shortest_dist
         return ans, total_dist
 
@@ -209,7 +212,7 @@ class GraphAlgo(GraphAlgoInterface):
                 center = node.key
         return center, best_dist
 
-    def plot_graph(self) -> None:
+    def plot_graph(self) -> bool:
         X_locations = []
         Y_locations = []
         for node in self.graph.nodes_dict.values():
@@ -231,15 +234,16 @@ class GraphAlgo(GraphAlgoInterface):
                         plt.annotate("", xy=(srcX, srcY), xytext=(destX, destY),
                                      arrowprops={'arrowstyle': "<-", 'lw': 2})
         plt.show()
+        return True
 
 
-if __name__ == '__main__':
-    g = GraphAlgo()
-    # g.load_from_json("../../data/NotConnectedG.json")
-    # g.load_from_json("../../data/1000Nodes.json")
-    g.load_from_json("../../data/1000Nodes.json")
-    # print(g.shortest_path(0, 6))
-    print(g.centerPoint())
-    # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
-    # print(g.is_connected())
-    # g.plot_graph()
+# if __name__ == '__main__':
+#     g = GraphAlgo()
+#     # g.load_from_json("../../data/NotConnectedG.json")
+#     # g.load_from_json("../../data/1000Nodes.json")
+#     g.load_from_json("../../data/1000Nodes.json")
+#     # print(g.shortest_path(0, 6))
+#     print(g.centerPoint())
+#     # print(g.TSP([0, 11, 41, 23, 32, 12, 7, 3, 35, 39]))
+#     # print(g.is_connected())
+#     # g.plot_graph()

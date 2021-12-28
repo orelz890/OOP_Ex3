@@ -252,7 +252,7 @@ class DiGraph(GraphInterface):
     #     src.tag = src_key
     #     return valid_path
 
-    def dijkstra(self, src: int) -> float:
+    def dijkstra(self, src: int) -> int:
         if self.nodes_dict.get(str(src)) is None:
             return no_path
 
@@ -273,6 +273,7 @@ class DiGraph(GraphInterface):
                         neighbour_node.tag = node.key
                         neighbour_node.w = neighbours_new_weight
                         node_q.insert(neighbour_node)
+        return valid_path
 
     def set_all_tags(self, w_val: float, tag_val: int):
         for node in self.nodes_dict.values():

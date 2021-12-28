@@ -1,4 +1,6 @@
 import unittest
+
+from Implementation.GraphAlgo import GraphAlgo
 from src.Implementation.DiGraph import DiGraph
 from src.Implementation.Node import Node
 from src.Implementation.Edge import Edge
@@ -145,4 +147,11 @@ class test_DiGraph(unittest.TestCase):
             self.assertEqual(890, node.tag)
 
     def test_dijkstra(self):
-        pass
+        is_valid = self.g.dijkstra(0)
+        self.assertEqual(-1, is_valid)
+        ga = GraphAlgo()
+        ga.load_from_json("../data/A0.json")
+        is_valid = ga.graph.dijkstra(0)
+        self.assertEqual(1, is_valid)
+        for node in ga.graph.nodes_dict.values():
+            node.tag >= 0
